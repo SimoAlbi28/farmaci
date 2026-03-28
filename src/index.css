@@ -37,6 +37,10 @@
   --transition: 0.2s ease;
 }
 
+html {
+  touch-action: manipulation;
+}
+
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--bg);

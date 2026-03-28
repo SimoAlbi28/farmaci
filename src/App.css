@@ -143,6 +143,32 @@
   gap: 8px;
 }
 
+.home-add-container {
+  display: flex;
+  justify-content: center;
+  padding: 0 0 16px;
+}
+
+.home-add-btn {
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 24px;
+  box-shadow: 0 4px 12px rgba(212, 136, 15, 0.3);
+  transition: all var(--transition);
+}
+
+.home-add-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(212, 136, 15, 0.4);
+}
+
 .navbar-add {
   width: 42px;
   height: 42px;
@@ -340,8 +366,6 @@
   display: flex;
   flex-direction: column;
   transition: all var(--transition);
-  aspect-ratio: 1;
-  justify-content: center;
 }
 
 .folder-badge-left,
@@ -465,7 +489,7 @@
   justify-content: center;
   gap: 6px;
   text-align: center;
-  padding: 12px 10px 4px;
+  padding: 28px 8px 8px;
   cursor: pointer;
   flex: 1;
 }
@@ -507,6 +531,14 @@
   display: flex;
   gap: 10px;
   margin-bottom: 16px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 400px) {
+  .search-bar {
+    flex-direction: column;
+  }
 }
 
 .search-bar input[type="text"] {
@@ -525,7 +557,7 @@
   padding: 10px 14px;
   border: 2px solid var(--border);
   border-radius: var(--radius-sm);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text);
   background: var(--surface);
   outline: none;
@@ -561,6 +593,7 @@
   position: relative;
   flex: 1;
   min-width: 0;
+  max-width: 100%;
 }
 
 .input-wrapper input,
@@ -641,6 +674,16 @@
   color: var(--text);
   text-align: center;
   letter-spacing: 0.3px;
+}
+
+.subsection-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  text-align: center;
 }
 
 /* ==================== MEDICINE CARDS ==================== */
@@ -887,11 +930,17 @@
   padding: 11px 14px;
   border: 2px solid var(--border);
   border-radius: var(--radius-sm);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--text);
   background: var(--bg);
   transition: border-color var(--transition), box-shadow var(--transition);
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-group input[type="date"] {
+  min-height: 48px;
 }
 
 .form-group input:focus,

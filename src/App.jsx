@@ -14,7 +14,6 @@ function App() {
   const [notifSeen, setNotifSeen] = useState(false)
   const [folderName, setFolderName] = useState('')
   const [showAddFolder, setShowAddFolder] = useState(false)
-  const [showAddMedicine, setShowAddMedicine] = useState(false)
 
   const refreshNotifCount = useCallback(() => {
     const count = getVisibleExpiredMedicines().length
@@ -84,15 +83,15 @@ function App() {
         </div>
         <h1 className="navbar-title">Farmaci</h1>
         <div className="navbar-actions">
-          {isHome && (
-            <button className="navbar-add" onClick={() => setShowAddFolder(true)} title="Nuova cartella">+</button>
-          )}
-          {page === 'folder' && (
-            <button className="navbar-add" onClick={() => setShowAddMedicine(true)} title="Aggiungi farmaco">+</button>
-          )}
           <BellButton count={notifCount} seen={notifSeen} onClick={openNotifications} />
         </div>
       </nav>
+
+      {isHome && (
+        <div className="home-add-container">
+          <button className="home-add-btn" onClick={() => setShowAddFolder(true)} title="Nuova cartella">+ Crea cartella</button>
+        </div>
+      )}
 
       {page === 'home' && (
         <HomePage
@@ -103,12 +102,7 @@ function App() {
         />
       )}
       {page === 'folder' && currentFolder && (
-        <FolderPage
-          folderId={currentFolder}
-          folderName={folderName}
-          showAddMedicine={showAddMedicine}
-          onCloseAddMedicine={() => setShowAddMedicine(false)}
-        />
+        <FolderPage folderId={currentFolder} folderName={folderName} />
       )}
       {page === 'notifications' && (
         <NotificationsPage onOpenFolder={openFolderFromNotif} />

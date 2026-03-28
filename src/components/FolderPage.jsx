@@ -10,8 +10,9 @@ import MedicineCard from './MedicineCard'
 import MedicineModal from './MedicineModal'
 import ConfirmModal from './ConfirmModal'
 
-export default function FolderPage({ folderId, folderName, showAddMedicine, onCloseAddMedicine }) {
+export default function FolderPage({ folderId, folderName }) {
   const [folder, setFolder] = useState(null)
+  const [showAddMed, setShowAddMed] = useState(false)
   const [editingMed, setEditingMed] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
   const [searchName, setSearchName] = useState('')
@@ -53,7 +54,7 @@ export default function FolderPage({ folderId, folderName, showAddMedicine, onCl
   const handleAddMedicine = (data) => {
     addMedicine(folderId, data)
     reload()
-    onCloseAddMedicine()
+    setShowAddMed(false)
   }
 
   const handleUpdateMedicine = (data) => {
@@ -71,6 +72,13 @@ export default function FolderPage({ folderId, folderName, showAddMedicine, onCl
   return (
     <div className="page">
       <h2 className="folder-page-name">{folderName}</h2>
+      <div className="home-add-container">
+        <button className="home-add-btn" onClick={() => setShowAddMed(true)} title="Aggiungi farmaco">+ Aggiungi farmaco</button>
+      </div>
+
+      <div className="section-divider">
+        <h2 className="section-title">Cerca</h2>
+      </div>
 
       <div className="search-bar">
         <div className="input-wrapper">
@@ -86,6 +94,9 @@ export default function FolderPage({ folderId, folderName, showAddMedicine, onCl
           )}
         </div>
       </div>
+
+      <h3 className="subsection-title">Filtri</h3>
+
       <div className="search-bar">
         <div className="input-wrapper">
           <select
@@ -142,10 +153,10 @@ export default function FolderPage({ folderId, folderName, showAddMedicine, onCl
         )}
       </div>
 
-      {showAddMedicine && (
+      {showAddMed && (
         <MedicineModal
           onSave={handleAddMedicine}
-          onClose={onCloseAddMedicine}
+          onClose={() => setShowAddMed(false)}
         />
       )}
 
