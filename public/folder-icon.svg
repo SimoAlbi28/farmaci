@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Ombra -->
+  <ellipse cx="60" cy="108" rx="38" ry="6" fill="#d4a84b" opacity="0.18"/>
+
+  <!-- Corpo cartella (parte dietro) -->
+  <path d="M14 36 C14 30, 18 26, 24 26 L48 26 C52 26, 54 28, 56 32 L60 38 L96 38 C102 38, 106 42, 106 48 L106 90 C106 96, 102 100, 96 100 L24 100 C18 100, 14 96, 14 90 Z" fill="url(#folderBack)"/>
+
+  <!-- Tab della cartella -->
+  <path d="M14 36 C14 30, 18 26, 24 26 L46 26 C50 26, 53 28, 55 32 L60 40 L14 40 Z" fill="url(#tabGrad)"/>
+
+  <!-- Corpo cartella (parte davanti) -->
+  <path d="M10 48 C10 43, 14 40, 19 40 L101 40 C106 40, 110 43, 110 48 L106 92 C106 97, 102 100, 97 100 L23 100 C18 100, 14 97, 14 92 Z" fill="url(#folderFront)"/>
+
+  <!-- Riflesso lucido in alto -->
+  <path d="M10 48 C10 43, 14 40, 19 40 L101 40 C106 40, 110 43, 110 48 L108 55 L12 55 Z" fill="white" opacity="0.25"/>
+
+  <!-- Linea decorativa -->
+  <line x1="28" y1="62" x2="72" y2="62" stroke="white" stroke-opacity="0.35" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="28" y1="72" x2="58" y2="72" stroke="white" stroke-opacity="0.2" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Piccolo segno + -->
+  <circle cx="88" cy="80" r="12" fill="white" opacity="0.25"/>
+  <line x1="82" y1="80" x2="94" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="88" y1="74" x2="88" y2="86" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+
+  <defs>
+    <linearGradient id="folderBack" x1="14" y1="26" x2="106" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#c96b20"/>
+      <stop offset="100%" stop-color="#a85a18"/>
+    </linearGradient>
+    <linearGradient id="tabGrad" x1="14" y1="26" x2="60" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#e8a317"/>
+      <stop offset="100%" stop-color="#d4880f"/>
+    </linearGradient>
+    <linearGradient id="folderFront" x1="10" y1="40" x2="110" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f0b429"/>
+      <stop offset="50%" stop-color="#e8a317"/>
+      <stop offset="100%" stop-color="#d4880f"/>
+    </linearGradient>
+  </defs>
+</svg>

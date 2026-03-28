@@ -1,0 +1,631 @@
+/* ==================== PAGE LAYOUT ==================== */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 90px;
+  position: relative;
+}
+
+/* ==================== HEADER ==================== */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 0 20px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 10;
+}
+
+.home-header {
+  flex-direction: column;
+  gap: 8px;
+  padding: 28px 0 24px;
+}
+
+.app-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  box-shadow: var(--shadow-md);
+  object-fit: cover;
+}
+
+.page-header h1 {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.home-header h1 {
+  text-transform: none;
+}
+
+.btn-back {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-light);
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn-back:hover {
+  background: rgba(212, 136, 15, 0.2);
+}
+
+.header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: 18px;
+  transition: background var(--transition);
+}
+
+.btn-icon:hover {
+  background: var(--primary-light);
+}
+
+.btn-danger-icon:hover {
+  background: var(--red-bg);
+}
+
+/* ==================== NOTIFICATIONS ==================== */
+.notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.notification {
+  background: var(--red-bg);
+  border: 1px solid #f5b7b1;
+  border-left: 5px solid var(--red);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.4;
+}
+
+.notification-icon {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  background: var(--red);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.notification-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.btn-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-warm);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(201, 107, 32, 0.1);
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn-link:hover {
+  background: rgba(201, 107, 32, 0.18);
+}
+
+.btn-dismiss {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+
+.btn-dismiss:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text);
+}
+
+/* ==================== FOLDER CARDS ==================== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.folder-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition);
+}
+
+.folder-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.folder-card-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 24px 16px 16px;
+  cursor: pointer;
+}
+
+.folder-actions {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 8px 10px;
+}
+
+.folder-icon {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.folder-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.folder-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-warm);
+  background: rgba(201, 107, 32, 0.1);
+  padding: 3px 12px;
+  border-radius: 20px;
+}
+
+/* ==================== SEARCH & SECTION TITLE ==================== */
+.search-bar {
+  margin-bottom: 16px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.search-bar input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(212, 136, 15, 0.15);
+}
+
+.search-bar input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 14px;
+  letter-spacing: 0.3px;
+}
+
+/* ==================== MEDICINE CARDS ==================== */
+.medicines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.medicine-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  transition: box-shadow var(--transition);
+}
+
+.medicine-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.medicine-card.status-ok {
+  border-left: 5px solid var(--green);
+}
+
+.medicine-card.status-warning {
+  border-left: 5px solid var(--yellow);
+}
+
+.medicine-card.status-expired {
+  border-left: 5px solid var(--red);
+}
+
+.medicine-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.medicine-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.medicine-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.btn-icon-sm {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  transition: background var(--transition);
+}
+
+.btn-icon-sm:hover {
+  background: var(--primary-light);
+}
+
+.medicine-expiry {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+.expiry-label {
+  color: var(--text-secondary);
+}
+
+.expiry-date {
+  font-weight: 600;
+}
+
+.expiry-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-ok {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.badge-warning {
+  background: var(--yellow-bg);
+  color: var(--yellow);
+}
+
+.badge-expired {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.medicine-details {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.detail-tag {
+  font-size: 13px;
+  background: var(--primary-light);
+  padding: 4px 12px;
+  border-radius: 20px;
+  color: var(--text-secondary);
+}
+
+.medicine-notes {
+  width: 100%;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* ==================== MODALS ==================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(61, 44, 30, 0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 28px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: scaleIn 0.25s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.93) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-small {
+  max-width: 360px;
+  text-align: center;
+}
+
+.modal h2 {
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  color: var(--text);
+}
+
+.confirm-message {
+  font-size: 16px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(212, 136, 15, 0.15);
+  background: var(--surface);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.form-error {
+  color: var(--red);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+/* ==================== BUTTONS ==================== */
+.btn {
+  padding: 11px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(212, 136, 15, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 4px 14px rgba(212, 136, 15, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  box-shadow: 0 2px 8px rgba(192, 57, 43, 0.25);
+}
+
+.btn-danger:hover {
+  background: var(--danger-hover);
+  box-shadow: 0 4px 14px rgba(192, 57, 43, 0.35);
+  transform: translateY(-1px);
+}
+
+/* ==================== FAB ==================== */
+.fab {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 100%);
+  color: white;
+  font-size: 30px;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(212, 136, 15, 0.35);
+  transition: all var(--transition);
+  z-index: 50;
+}
+
+.fab:hover {
+  transform: translateX(-50%) scale(1.1);
+  box-shadow: 0 8px 28px rgba(212, 136, 15, 0.45);
+}
+
+/* ==================== EMPTY STATE ==================== */
+.empty-message {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 15px;
+  padding: 56px 16px;
+  grid-column: 1 / -1;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 400px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .notification {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .notification-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
