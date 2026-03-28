@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react'
-import { getFolders, createFolder, renameFolder, deleteFolder, getExpiredMedicines } from '../utils/storage'
+import { getFolders, createFolder, renameFolder, deleteFolder, getAlertsByFolder } from '../utils/storage'
 import FolderModal from './FolderModal'
 import ConfirmModal from './ConfirmModal'
 
-export default function HomePage({ onOpenFolder }) {
+export default function HomePage({ onOpenFolder, showAddFolder, onCloseAddFolder }) {
   const [folders, setFolders] = useState([])
-  const [expired, setExpired] = useState([])
-  const [dismissed, setDismissed] = useState([])
-  const [showModal, setShowModal] = useState(false)
+  const [alerts, setAlerts] = useState({})
   const [editingFolder, setEditingFolder] = useState(null)
   const [deletingFolder, setDeletingFolder] = useState(null)
+  const [openPopup, setOpenPopup] = useState(null)
+  const [popupPos, setPopupPos] = useState({ top: 0, left: 0 })
+  const [popupData, setPopupData] = useState(null)
 
   const reload = () => {
     setFolders(getFolders())
-    setExpired(getExpiredMedicines())
+    setAlerts(getAlertsByFolder())
   }
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function HomePage({ onOpenFolder }) {
     const folder = createFolder(name)
     if (!folder) return false
     reload()
-    setShowModal(false)
+    onCloseAddFolder()
     return true
   }
 
@@ -42,94 +43,122 @@ export default function HomePage({ onOpenFolder }) {
     setDeletingFolder(null)
   }
 
-  const dismissNotification = (medId) => {
-    setDismissed(prev => [...prev, medId])
+  const togglePopup = (folderId, type, e) => {
+    e.stopPropagation()
+    if (openPopup === folderId + '|' + type) {
+      setOpenPopup(null)
+      setPopupData(null)
+      return
+    }
+    const rect = e.currentTarget.getBoundingClientRect()
+    const popupWidth = 220
+    let left = rect.left
+    if (left + popupWidth > window.innerWidth - 16) {
+      left = rect.right - popupWidth
+    }
+    if (left < 16) left = 16
+    setPopupPos({ top: rect.bottom + 6, left })
+    setPopupData({ folderId, type })
+    setOpenPopup(folderId + '|' + type)
   }
 
-  const visibleExpired = expired.filter(m => !dismissed.includes(m.id))
-
   return (
-    <div className="page">
-      <header className="page-header home-header">
-        <img src="/icon-logo.png" alt="Logo Farmaci" className="app-logo" />
-        <h1>Farmaci</h1>
-      </header>
-
-      {visibleExpired.length > 0 && (
-        <div className="notifications">
-          {visibleExpired.map(med => (
-            <div key={med.id} className="notification">
-              <div className="notification-text">
-                <span className="notification-icon">!</span>
-                <span>
-                  <strong>{med.name}</strong> nella cartella <strong>{med.folderName}</strong> è scaduto
-                  {' '}({new Date(med.expiry).toLocaleDateString('it-IT')})
-                </span>
-              </div>
-              <div className="notification-actions">
-                <button
-                  className="btn-link"
-                  onClick={() => onOpenFolder(med.folderId)}
-                >
-                  Vai al farmaco
-                </button>
-                <button
-                  className="btn-dismiss"
-                  onClick={() => dismissNotification(med.id)}
-                  title="Chiudi notifica"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
+    <div className="page" onClick={() => setOpenPopup(null)}>
       <div className="card-grid">
-        {folders.map(folder => (
-          <div key={folder.id} className="folder-card">
-            <div
-              className="folder-card-main"
-              onClick={() => onOpenFolder(folder.id)}
-            >
-              <img src="/medicine-icon.svg" alt="" className="folder-icon" />
-              <div className="folder-name">{folder.name}</div>
-              <div className="folder-count">
-                {folder.medicines.length} farmac{folder.medicines.length === 1 ? 'o' : 'i'}
+        {folders.map(folder => {
+          const folderAlerts = alerts[folder.id]
+          return (
+            <div key={folder.id} className="folder-card">
+              {folderAlerts && folderAlerts.warning.length > 0 && (
+                <div className="folder-badge-left" onClick={e => e.stopPropagation()}>
+                  <button
+                    className="folder-warning folder-warning-yellow"
+                    onClick={(e) => togglePopup(folder.id, 'warning', e)}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" className="warning-icon">
+                      <path d="M12 2L1 21h22L12 2z" fill="#ca8a04"/>
+                      <text x="12" y="18" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">!</text>
+                    </svg>
+                    <span>{folderAlerts.warning.length}</span>
+                  </button>
+                </div>
+              )}
+              {folderAlerts && folderAlerts.expired.length > 0 && (
+                <div className="folder-badge-right" onClick={e => e.stopPropagation()}>
+                  <button
+                    className="folder-warning folder-warning-red"
+                    onClick={(e) => togglePopup(folder.id, 'expired', e)}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" className="warning-icon">
+                      <path d="M12 2L1 21h22L12 2z" fill="#c0392b"/>
+                      <text x="12" y="18" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">!</text>
+                    </svg>
+                    <span>{folderAlerts.expired.length}</span>
+                  </button>
+                </div>
+              )}
+              <div
+                className="folder-card-main"
+                onClick={() => onOpenFolder(folder.id)}
+              >
+                <img src="/medicine-icon.svg" alt="" className="folder-icon" />
+                <div className="folder-name">{folder.name}</div>
+                <div className="folder-count">
+                  {folder.medicines.length} farmac{folder.medicines.length === 1 ? 'o' : 'i'}
+                </div>
+              </div>
+              <div className="folder-actions">
+                <button
+                  className="btn-icon-sm"
+                  onClick={() => setEditingFolder(folder)}
+                  title="Rinomina"
+                >
+                  ✏️
+                </button>
+                <button
+                  className="btn-icon-sm btn-icon-sm-danger"
+                  onClick={() => setDeletingFolder(folder)}
+                  title="Elimina"
+                >
+                  🗑️
+                </button>
               </div>
             </div>
-            <div className="folder-actions">
-              <button
-                className="btn-icon-sm"
-                onClick={() => setEditingFolder(folder)}
-                title="Rinomina"
-              >
-                ✏️
-              </button>
-              <button
-                className="btn-icon-sm"
-                onClick={() => setDeletingFolder(folder)}
-                title="Elimina"
-              >
-                🗑️
-              </button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
         {folders.length === 0 && (
           <p className="empty-message">Nessuna cartella. Creane una!</p>
         )}
       </div>
 
-      <button className="fab" onClick={() => setShowModal(true)} title="Nuova cartella">
-        +
-      </button>
+      {openPopup && popupData && (() => {
+        const folderAlerts = alerts[popupData.folderId]
+        if (!folderAlerts) return null
+        const items = popupData.type === 'expired' ? folderAlerts.expired : folderAlerts.warning
+        const isExpired = popupData.type === 'expired'
+        return (
+          <div
+            className="alert-popup"
+            style={{ top: popupPos.top, left: popupPos.left }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className={`alert-popup-title ${isExpired ? 'alert-popup-red' : 'alert-popup-yellow'}`}>
+              {isExpired ? 'Scaduti' : 'In scadenza'}
+            </div>
+            {items.map((med, i) => (
+              <div key={i} className="alert-popup-item">
+                <span>{med.name}</span>
+                <span className="alert-popup-date">{new Date(med.expiry).toLocaleDateString('it-IT')}</span>
+              </div>
+            ))}
+          </div>
+        )
+      })()}
 
-      {showModal && (
+      {showAddFolder && (
         <FolderModal
           onSave={handleCreateFolder}
-          onClose={() => setShowModal(false)}
+          onClose={onCloseAddFolder}
         />
       )}
 

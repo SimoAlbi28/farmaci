@@ -91,6 +91,30 @@ export function deleteMedicine(folderId, medicineId) {
   saveData(data)
 }
 
+export function getAlertsByFolder() {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const alerts = {}
+  for (const folder of loadData().folders) {
+    const expired = []
+    const warning = []
+    for (const med of folder.medicines) {
+      const expDate = new Date(med.expiry)
+      expDate.setHours(0, 0, 0, 0)
+      const diffDays = (expDate - today) / (1000 * 60 * 60 * 24)
+      if (diffDays < 0) {
+        expired.push({ name: med.name, expiry: med.expiry })
+      } else if (diffDays <= 7) {
+        warning.push({ name: med.name, expiry: med.expiry })
+      }
+    }
+    if (expired.length > 0 || warning.length > 0) {
+      alerts[folder.id] = { expired, warning }
+    }
+  }
+  return alerts
+}
+
 export function getExpiredMedicines() {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -107,6 +131,45 @@ export function getExpiredMedicines() {
   return expired
 }
 
+const DISMISSED_KEY = 'farmaci_dismissed_notifications'
+
+export function getDismissedIds() {
+  try {
+    return JSON.parse(localStorage.getItem(DISMISSED_KEY) || '[]')
+  } catch {
+    return []
+  }
+}
+
+export function dismissNotification(medId) {
+  const ids = getDismissedIds()
+  if (!ids.includes(medId)) {
+    ids.push(medId)
+    localStorage.setItem(DISMISSED_KEY, JSON.stringify(ids))
+  }
+}
+
+export function getVisibleExpiredMedicines() {
+  const dismissed = getDismissedIds()
+  return getExpiredMedicines().filter(m => !dismissed.includes(m.id))
+}
+
+const SEEN_KEY = 'farmaci_notif_seen'
+
+export function getUnseenCount() {
+  const visible = getVisibleExpiredMedicines()
+  const seenAt = localStorage.getItem(SEEN_KEY)
+  if (!seenAt) return visible.length
+  return visible.filter(m => {
+    const dismissed = getDismissedIds()
+    return !dismissed.includes(m.id)
+  }).length
+}
+
+export function markNotificationsSeen() {
+  localStorage.setItem(SEEN_KEY, Date.now().toString())
+}
+
 export function getExpiryStatus(expiryDate) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -114,6 +177,8 @@ export function getExpiryStatus(expiryDate) {
   expDate.setHours(0, 0, 0, 0)
   const diffDays = (expDate - today) / (1000 * 60 * 60 * 24)
   if (diffDays < 0) return 'expired'
+  if (diffDays === 0) return 'today'
+  if (diffDays === 1) return 'tomorrow'
   if (diffDays <= 7) return 'warning'
   return 'ok'
 }

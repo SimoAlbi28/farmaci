@@ -6,6 +6,8 @@ export default function MedicineCard({ medicine, onEdit, onDelete }) {
 
   const statusLabel = {
     ok: 'Valido',
+    tomorrow: 'Scade domani',
+    today: 'Scade oggi',
     warning: 'In scadenza',
     expired: 'Scaduto',
   }
@@ -18,7 +20,7 @@ export default function MedicineCard({ medicine, onEdit, onDelete }) {
           <button className="btn-icon-sm" onClick={onEdit} title="Modifica">
             ✏️
           </button>
-          <button className="btn-icon-sm" onClick={onDelete} title="Elimina">
+          <button className="btn-icon-sm btn-icon-sm-danger" onClick={onDelete} title="Elimina">
             🗑️
           </button>
         </div>

@@ -4,17 +4,19 @@ import {
   addMedicine,
   updateMedicine,
   deleteMedicine,
+  getExpiryStatus,
 } from '../utils/storage'
 import MedicineCard from './MedicineCard'
 import MedicineModal from './MedicineModal'
 import ConfirmModal from './ConfirmModal'
 
-export default function FolderPage({ folderId, onBack }) {
+export default function FolderPage({ folderId, folderName, showAddMedicine, onCloseAddMedicine }) {
   const [folder, setFolder] = useState(null)
-  const [showMedModal, setShowMedModal] = useState(false)
   const [editingMed, setEditingMed] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
-  const [search, setSearch] = useState('')
+  const [searchName, setSearchName] = useState('')
+  const [searchDate, setSearchDate] = useState('')
+  const [dateMode, setDateMode] = useState('all')
 
   const reload = () => setFolder(getFolder(folderId))
 
@@ -24,13 +26,24 @@ export default function FolderPage({ folderId, onBack }) {
 
   if (!folder) return null
 
-  const query = search.trim().toLowerCase()
+  const nameQuery = searchName.trim().toLowerCase()
 
   const filteredMedicines = folder.medicines.filter(med => {
-    if (!query) return true
-    const nameMatch = med.name.toLowerCase().includes(query)
-    const dateMatch = new Date(med.expiry).toLocaleDateString('it-IT').includes(query)
-    return nameMatch || dateMatch
+    const nameMatch = !nameQuery || med.name.toLowerCase().includes(nameQuery)
+    let dateMatch = true
+    const status = getExpiryStatus(med.expiry)
+    if (dateMode === 'expired') {
+      dateMatch = status === 'expired'
+    } else if (dateMode === 'warning') {
+      dateMatch = status === 'warning' || status === 'today' || status === 'tomorrow'
+    } else if (dateMode === 'ok') {
+      dateMatch = status === 'ok'
+    } else if (dateMode === 'before' && searchDate) {
+      dateMatch = med.expiry <= searchDate
+    } else if (dateMode === 'after' && searchDate) {
+      dateMatch = med.expiry >= searchDate
+    }
+    return nameMatch && dateMatch
   })
 
   const sortedMedicines = [...filteredMedicines].sort(
@@ -40,7 +53,7 @@ export default function FolderPage({ folderId, onBack }) {
   const handleAddMedicine = (data) => {
     addMedicine(folderId, data)
     reload()
-    setShowMedModal(false)
+    onCloseAddMedicine()
   }
 
   const handleUpdateMedicine = (data) => {
@@ -57,24 +70,63 @@ export default function FolderPage({ folderId, onBack }) {
 
   return (
     <div className="page">
-      <header className="page-header">
-        <button className="btn-back" onClick={onBack}>
-          ← Indietro
-        </button>
-        <h1>{folder.name}</h1>
-      </header>
+      <h2 className="folder-page-name">{folderName}</h2>
 
       <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Cerca per nome o data (es. 15/04/2026)..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          autoComplete="off"
-        />
+        <div className="input-wrapper">
+          <input
+            type="text"
+            placeholder="Cerca per nome..."
+            value={searchName}
+            onChange={e => setSearchName(e.target.value)}
+            autoComplete="off"
+          />
+          {searchName && (
+            <button className="btn-clear-field" onClick={() => setSearchName('')} title="Svuota">✕</button>
+          )}
+        </div>
+      </div>
+      <div className="search-bar">
+        <div className="input-wrapper">
+          <select
+            value={dateMode}
+            onChange={e => { setDateMode(e.target.value); setSearchDate('') }}
+            className="date-mode-select"
+          >
+            <option value="all">Seleziona</option>
+            <option value="expired">Scaduto</option>
+            <option value="warning">In scadenza</option>
+            <option value="ok">Valido</option>
+            <option value="before">Scade prima del</option>
+            <option value="after">Scade dopo il</option>
+          </select>
+        </div>
+        {(dateMode === 'before' || dateMode === 'after') && (
+          <div className="input-wrapper">
+            <input
+              type="date"
+              value={searchDate}
+              onChange={e => setSearchDate(e.target.value)}
+            />
+            {searchDate && (
+              <button className="btn-clear-field" onClick={() => setSearchDate('')} title="Svuota">✕</button>
+            )}
+          </div>
+        )}
       </div>
 
-      <h2 className="section-title">Riepilogo Farmaci</h2>
+      {(searchName || searchDate || dateMode !== 'all') && (
+        <button
+          className="btn-reset"
+          onClick={() => { setSearchName(''); setSearchDate(''); setDateMode('all') }}
+        >
+          Reset
+        </button>
+      )}
+
+      <div className="section-divider">
+        <h2 className="section-title">Riepilogo Farmaci</h2>
+      </div>
 
       <div className="medicines-list">
         {sortedMedicines.map(med => (
@@ -90,14 +142,10 @@ export default function FolderPage({ folderId, onBack }) {
         )}
       </div>
 
-      <button className="fab" onClick={() => setShowMedModal(true)} title="Aggiungi farmaco">
-        +
-      </button>
-
-      {showMedModal && (
+      {showAddMedicine && (
         <MedicineModal
           onSave={handleAddMedicine}
-          onClose={() => setShowMedModal(false)}
+          onClose={onCloseAddMedicine}
         />
       )}
 
