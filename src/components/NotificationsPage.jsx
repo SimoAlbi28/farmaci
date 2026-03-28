@@ -20,12 +20,10 @@ export default function NotificationsPage({ onOpenFolder }) {
         <div className="notifications">
           {notifications.map(med => (
             <div key={med.id} className="notification">
+              <span className="notification-icon">!</span>
               <div className="notification-text">
-                <span className="notification-icon">!</span>
-                <span>
-                  <strong>{med.name}</strong> nella cartella <strong>{med.folderName}</strong> è scaduto
-                  {' '}({new Date(med.expiry).toLocaleDateString('it-IT')})
-                </span>
+                <strong>{med.name}</strong> nella cartella <strong>{med.folderName}</strong> è scaduto
+                {' '}({new Date(med.expiry).toLocaleDateString('it-IT')})
               </div>
               <div className="notification-actions">
                 <button
