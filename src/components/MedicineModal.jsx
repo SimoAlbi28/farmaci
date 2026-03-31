@@ -17,7 +17,7 @@ export default function MedicineModal({ initialData = null, onSave, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!form.name.trim() || !form.expiry) return
+    if (!form.name.trim()) return
     onSave({
       name: form.name.trim(),
       expiry: form.expiry,
@@ -46,13 +46,12 @@ export default function MedicineModal({ initialData = null, onSave, onClose }) {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="med-expiry">Data di scadenza *</label>
+            <label htmlFor="med-expiry">Data di scadenza</label>
             <input
               id="med-expiry"
               type="date"
               value={form.expiry}
               onChange={e => update('expiry', e.target.value)}
-              required
             />
           </div>
           <div className="form-group">

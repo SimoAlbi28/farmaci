@@ -90,6 +90,8 @@ function App() {
       {isHome && (
         <div className="home-add-container">
           <button className="home-add-btn" onClick={() => setShowAddFolder(true)} title="Nuova cartella">+ Crea cartella</button>
+          <hr className="home-separator" />
+          <h2 className="home-section-title">Cartelle</h2>
         </div>
       )}
 
